@@ -7,31 +7,31 @@ Sistema embarcado avançado para monitoramento contínuo de condições ambienta
 ## Circuito
 
 <p align="center">
-  <img src="Vinheria_agnello/Circuito_arduino.png" width="600" alt="Circuito montado no WokWI">
+  <img src="Vinheria_agnello/Circuito_vinheria.png" width="600" alt="Circuito montado no WokWI">
 </p>
 
 ---
 
-## 🎯 Funcionalidades Principais
+## Funcionalidades Principais
 
-### 📊 Monitoramento em Tempo Real
+### Monitoramento em Tempo Real
 - **Temperatura**: Leitura precisa com sensor DHT22
 - **Umidade**: Monitoramento de umidade relativa do ar  
 - **Luminosidade**: Medição percentual com calibração personalizável
 - **Exibição**: Display LCD com ícones customizados para cada parâmetro
 
-### ⚠️ Sistema de Alertas Inteligente
+### Sistema de Alertas Inteligente
 - **Flags automáticas**: Registro automático quando valores excedem limites
 - **Alertas visuais**: LEDs verde (normal) e vermelho (alerta)
 - **Alertas sonoros**: Buzzer ativo durante condições críticas
 - **Cooldown configurável**: Evita múltiplos registros consecutivos
 
-### 💾 Armazenamento de Dados
+### Armazenamento de Dados
 - **EEPROM**: Armazena até 140 eventos com timestamp
 - **Registro temporal**: Data e hora via RTC DS1307
 - **Persistência**: Dados mantidos após desligamento
 
-### ⚙️ Interface Completa
+### Interface Completa
 - **Menu navegável**: 6 botões para controle total
 - **Configurações**: Velocidade texto, unidade temperatura, fuso horário
 - **Animação**: Introdução personalizável com cavalo em movimento
@@ -39,7 +39,7 @@ Sistema embarcado avançado para monitoramento contínuo de condições ambienta
 
 ---
 
-## 🛠 Componentes Utilizados
+## Componentes Utilizados
 
 | Componente | Quantidade | Descrição |
 |------------|------------|-----------|
@@ -55,18 +55,18 @@ Sistema embarcado avançado para monitoramento contínuo de condições ambienta
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
-sistema-monitoramento-arduino/
-├── sistema_garotos.ino          # Código principal
-├── README.md                    # Documentação
-└── diagrama.png                 # Esquemático do circuito
+CP-02/
+├── vinheria_agnello.ino          # Código principal
+├── README.md                    
+└── Vinheria_agnello              # Esquemático do circuito
 ```
 
 ---
 
-## 🚀 Como Usar
+## Como Usar
 
 ### 1. Instalação
 ```cpp
@@ -96,12 +96,12 @@ sistema-monitoramento-arduino/
 
 ### 4. Modos de Operação
 
-#### 📺 Modo Display
+#### Modo Display
 - Monitoramento contínuo dos sensores
 - Exibe valores numéricos e ícones
 - Salva flags automaticamente quando necessário
 
-#### ⚙️ Menu Setup
+#### Menu Setup
 - **Velocidade Texto**: 100-2000ms
 - **Unidade Temperatura**: Celsius/Fahrenheit
 - **Fuso Horário**: UTC -12 a +12
@@ -110,13 +110,13 @@ sistema-monitoramento-arduino/
 - **Calibração LDR**: Configura min/max luminosidade
 - **Reset Fábrica**: Restaura configurações padrão
 
-#### 📋 Menu Logs
+#### Menu Logs
 - **Debug Serial**: Exibe status completo
 - **Limpar Flags**: Remove todos os registros
 
 ---
 
-## ⚙️ Configurações Padrão
+## Configurações Padrão
 
 | Parâmetro | Valor Padrão | Descrição |
 |-----------|--------------|-----------|
@@ -131,7 +131,7 @@ sistema-monitoramento-arduino/
 
 ---
 
-## 🔧 Lógica do Sistema
+## Lógica do Sistema
 
 ### Monitoramento Contínuo
 ```cpp
@@ -177,7 +177,7 @@ if (luz > 70 || temp > 30 || hum > 80) {
 
 ---
 
-## 👥 Equipe de Desenvolvimento
+## Equipe de Desenvolvimento
 
 | Nome | Função |
 |------|--------|
