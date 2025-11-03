@@ -1,22 +1,21 @@
-//====================== BIBLIOTECAS ======================
+
 #include <EEPROM.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "DHT.h"
 #include <RTClib.h>
 
-//====================== DEFINIÇÃO DOS BOTÕES ======================
-#define BTN_CONFIRMAR 2    // D2 - Confirmar (✓)
-#define BTN_UP 3           // D3 - Up (▲)
-#define BTN_DOWN 4         // D4 - Down (▼)
-#define BTN_CANCELAR 5     // D5 - Volta/Cancelar (✗)
-#define BTN_INCREMENTA 6   // D6 - Incrementa (▶)
-#define BTN_DECREMENTA 7   // D7 - Decrementa (◀)
 
-//====================== LIMITES FIXOS PARA AS FLAGS ======================
-const uint16_t LIMITE_LUMINOSIDADE = 70;    // Acima de 70% → Flag
-const int16_t LIMITE_TEMPERATURA = 30;      // Acima de 30°C → Flag  
-const uint16_t LIMITE_UMIDADE = 80;         // Acima de 80% → Flag
+#define BTN_CONFIRMAR 2    
+#define BTN_UP 3           
+#define BTN_DOWN 4         
+#define BTN_CANCELAR 5     
+#define BTN_INCREMENTA 6   
+#define BTN_DECREMENTA 7   
+
+const uint16_t LIMITE_LUMINOSIDADE = 70;    
+const int16_t LIMITE_TEMPERATURA = 30;        
+const uint16_t LIMITE_UMIDADE = 80;         
 
 const int velocidade = 20;  
 short int menuatual = 0, opcao = 0;
@@ -38,7 +37,7 @@ RTC_DS1307 rtc;
  
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-//====================== ANIMAÇÃO DO CAVALO ======================
+
 const byte anim_cavalo[2][8][8] PROGMEM = {
   {
     {0x00, 0x00, 0x00, 0x00, 0x03, 0x07, 0x0E, 0x0E},
@@ -79,7 +78,7 @@ void anim_executar_inicializacao() {
       anim_tempo_ultimo_quadro = millis();
       anim_frame_atual = 1 - anim_frame_atual;
       
-      // Carrega sprites do frame atual da PROGMEM
+      
       for (int i = 0; i < 8; i++) {
         uint8_t buffer[8];
         memcpy_P(buffer, anim_cavalo[anim_frame_atual][i], 8);
@@ -88,7 +87,7 @@ void anim_executar_inicializacao() {
       
       lcd.clear();
       
-      // Desenha cavalo
+     
       for (int c = 0; c < 4; c++) {
         int xc = anim_posicao_cavalo + c;
         if ((xc >= 0) && (xc < 16)) {
@@ -97,7 +96,7 @@ void anim_executar_inicializacao() {
         }
       }
       
-      // Desenha texto "Os Garotos" quando o cavalo chega na posição
+      
       if (anim_posicao_cavalo >= 4) {
         lcd.setCursor(anim_posicao_cavalo + 4, 0);
         lcd.print("Os");
@@ -117,7 +116,7 @@ void anim_executar_inicializacao() {
       }
     }
     
-    // Verifica se algum botão foi pressionado para pular a animação
+    
     if (lerTecla() == 'D') {
       animacao_ativa = false;
       lcd.clear();
@@ -127,7 +126,7 @@ void anim_executar_inicializacao() {
   }
 }
 
-//====================== CONFIGURAÇÃO EEPROM ======================
+
 #define CFG_INTERVALO_SCROLL_ADDR 0  
 #define CFG_UNIDADE_TEMP_ADDR     2 
 #define CFG_DISPLAY_ADDR          4  
@@ -139,11 +138,11 @@ void anim_executar_inicializacao() {
 int enderecoEEPROM;
  
 const uint16_t config_fac[] PROGMEM = {
-  800,  // intervaloScroll
-  1,    // unidadeTemperatura
-  -3,   // display
-  1,    // intro
-  1     // flagCooldown
+  800,  
+  1,    
+  -3,   
+  1,    
+  1     
 };
  
 const uint8_t variaveismutaveis = 5; 
@@ -181,7 +180,7 @@ void primeirosetup(void){
   }
 }
 
-//====================== SISTEMA DE BOTÕES ======================
+
 char lerTecla() {
   static unsigned long ultimaLeitura = 0;
   if (millis() - ultimaLeitura < 50) return 0;
@@ -197,7 +196,7 @@ char lerTecla() {
   return 0;
 }
 
-//====================== FUNÇÕES DE AJUSTE COM BOTÕES ======================
+
 void ajustarVelocidadeTexto() {
   lcd.clear();
   lcd.print("Velocidade Texto");
@@ -433,7 +432,7 @@ void confirmarReset() {
   }
 }
 
-//====================== TEXTO E DESCRIÇÕES ======================
+
 const char texto0[] PROGMEM = "*-----Menu-----*";
 const char texto1[] PROGMEM = "1. Display      ";
 const char texto2[] PROGMEM = "2. Setup        ";
@@ -488,27 +487,27 @@ const uint8_t customChars2[] PROGMEM = {0x00,0x00,0x1F,0x11,0x0A,0x04,0x00,0x00}
 const uint8_t customChars3[] PROGMEM = {0x00,0x00,0x1F,0x1F,0x0E,0x04,0x00,0x00};     
 const uint8_t customChars4[] PROGMEM = {0x00,0x00,0x04,0x0A,0x11,0x1F,0x00,0x00};      
 const uint8_t customChars5[] PROGMEM = {0x00,0x00,0x04,0x0E,0x1F,0x1F,0x00,0x00};   
-// Luminosidade - Sol Fraco (≤33%)
-const uint8_t customChars6[] PROGMEM = {0x03,0x06,0x04,0x04,0x04,0x02,0x01,0x03};  // Esquerda
-const uint8_t customChars7[] PROGMEM = {0x18,0x0C,0x04,0x04,0x04,0x08,0x10,0x18};  // Direita
-// Luminosidade - Sol Médio (34% até LIMITE_LUMINOSIDADE)
-const uint8_t customChars8[] PROGMEM = {0x03,0x06,0x04,0x07,0x07,0x03,0x01,0x03};  // Esquerda
-const uint8_t customChars9[] PROGMEM = {0x18,0x0C,0x04,0x04,0x1C,0x18,0x10,0x18};  // Direita
-// Luminosidade - Sol Forte (>LIMITE_LUMINOSIDADE)
-const uint8_t customChars10[] PROGMEM = {0x03,0x07,0x07,0x07,0x07,0x03,0x01,0x03}; // Esquerda
-const uint8_t customChars11[] PROGMEM = {0x18,0x1C,0x1C,0x1C,0x1C,0x18,0x10,0x18}; // Direita
-// Umidade - Gota Normal (≤LIMITE_UMIDADE)
-const uint8_t customChars12[] PROGMEM = {0x01,0x02,0x04,0x04,0x08,0x04,0x02,0x03}; // Esquerda
-const uint8_t customChars13[] PROGMEM = {0x10,0x08,0x04,0x04,0x02,0x04,0x08,0x18}; // Direita
-// Umidade - Gota Alerta (>LIMITE_UMIDADE)
-const uint8_t customChars14[] PROGMEM = {0x01,0x02,0x04,0x05,0x0B,0x0F,0x07,0x03}; // Esquerda
-const uint8_t customChars15[] PROGMEM = {0x10,0x08,0x1C,0x1C,0x1E,0x1E,0x1C,0x18}; // Direita
-// Temperatura - Termômetro Normal (≤LIMITE_TEMPERATURA)
-const uint8_t customChars16[] PROGMEM = {0x02,0x05,0x04,0x04,0x02,0x01,0x00,0x00}; // Esquerda
-const uint8_t customChars17[] PROGMEM = {0x00,0x00,0x10,0x08,0x0C,0x12,0x12,0x08}; // Direita
-// Temperatura - Termômetro Alerta (>LIMITE_TEMPERATURA)
-const uint8_t customChars18[] PROGMEM = {0x02,0x07,0x07,0x07,0x03,0x01,0x00,0x00}; // Esquerda
-const uint8_t customChars19[] PROGMEM = {0x00,0x10,0x10,0x18,0x1C,0x1E,0x1E,0x0C}; // Direita
+
+const uint8_t customChars6[] PROGMEM = {0x03,0x06,0x04,0x04,0x04,0x02,0x01,0x03};  
+const uint8_t customChars7[] PROGMEM = {0x18,0x0C,0x04,0x04,0x04,0x08,0x10,0x18};  
+
+const uint8_t customChars8[] PROGMEM = {0x03,0x06,0x04,0x07,0x07,0x03,0x01,0x03};  
+const uint8_t customChars9[] PROGMEM = {0x18,0x0C,0x04,0x04,0x1C,0x18,0x10,0x18};  
+
+const uint8_t customChars10[] PROGMEM = {0x03,0x07,0x07,0x07,0x07,0x03,0x01,0x03}; 
+const uint8_t customChars11[] PROGMEM = {0x18,0x1C,0x1C,0x1C,0x1C,0x18,0x10,0x18}; 
+
+const uint8_t customChars12[] PROGMEM = {0x01,0x02,0x04,0x04,0x08,0x04,0x02,0x03}; 
+const uint8_t customChars13[] PROGMEM = {0x10,0x08,0x04,0x04,0x02,0x04,0x08,0x18}; 
+
+const uint8_t customChars14[] PROGMEM = {0x01,0x02,0x04,0x05,0x0B,0x0F,0x07,0x03}; 
+const uint8_t customChars15[] PROGMEM = {0x10,0x08,0x1C,0x1C,0x1E,0x1E,0x1C,0x18};
+
+const uint8_t customChars16[] PROGMEM = {0x02,0x05,0x04,0x04,0x02,0x01,0x00,0x00}; 
+const uint8_t customChars17[] PROGMEM = {0x00,0x00,0x10,0x08,0x0C,0x12,0x12,0x08};
+
+const uint8_t customChars18[] PROGMEM = {0x02,0x07,0x07,0x07,0x03,0x01,0x00,0x00}; 
+const uint8_t customChars19[] PROGMEM = {0x00,0x10,0x10,0x18,0x1C,0x1E,0x1E,0x0C}; 
 
 const uint8_t* const customChars[] PROGMEM = {
   customChars0, customChars1, customChars2,
@@ -520,13 +519,13 @@ const uint8_t* const customChars[] PROGMEM = {
   customChars18, customChars19
 };
 
-//====================== FUNÇÕES PRINCIPAIS ======================
+
 void begins(void){
   dht.begin();
   lcd.init();      
   lcd.backlight();
   
-  // Configura os botões como entradas com pull-up
+  
   pinMode(BTN_CONFIRMAR, INPUT_PULLUP);
   pinMode(BTN_UP, INPUT_PULLUP);
   pinMode(BTN_DOWN, INPUT_PULLUP);
@@ -538,14 +537,14 @@ void begins(void){
   pinMode(LED_VERMELHO, OUTPUT);
   pinMode(BUZZER, OUTPUT);
   
-  // Inicializa RTC
+  
   if (!rtc.begin()) {
     Serial.println("RTC não encontrado!");
     while (1);
   }
   if (!rtc.isrunning()) {
     Serial.println("RTC não está funcionando!");
-    //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    
   }
 }
  
@@ -739,7 +738,7 @@ void monitoramentoDisplay() {
   while (true) {
     char tecla = lerTecla();
     if (tecla == 'C') {
-      noTone(BUZZER); // Para o buzzer ao sair do modo Display
+      noTone(BUZZER); 
       EEPROM.put(1010,enderecoEEPROM);
       lcd.clear();
       menuatual = 0;
@@ -771,18 +770,18 @@ void monitoramentoDisplay() {
       luzMapeada = constrain(luzMapeada, 0, 100);
     }
 
-    // VERIFICA CONDIÇÕES PARA ATIVAÇÃO DAS FLAGS - A CADA LOOP
+    
     bool flagLuminosidade = luzMapeada > LIMITE_LUMINOSIDADE;
     bool flagTemperatura = temp > LIMITE_TEMPERATURA;
     bool flagUmidade = hum > LIMITE_UMIDADE;
     
     bool flagAtiva = flagLuminosidade || flagTemperatura || flagUmidade;
     
-    // CONTROLE DO BUZZER - FORA DO BLOCO DE SALVAR FLAG (CORREÇÃO)
+    
     if (flagAtiva) {
-      tone(BUZZER, 500); // Toca CONTINUAMENTE enquanto condições persistem
+      tone(BUZZER, 500); 
     } else {
-      noTone(BUZZER); // Para quando TODAS as condições normalizam
+      noTone(BUZZER); 
     }
 
     if (millis() - timerPrint >= 1500) {
@@ -837,7 +836,7 @@ void monitoramentoDisplay() {
       lcd.setCursor(15, 1); lcd.write(byte(2));
     }
 
-    // SALVAR FLAG NA EEPROM (separado do controle do buzzer)
+    
     if (flagAtiva && (enderecoEEPROM + 7 <= 1000) && millis() - timerFlag >= (unsigned long)flagCooldown * 60000) {
       timerFlag = millis();
       DateTime now = rtc.now();
@@ -887,14 +886,14 @@ void debugEEPROM() {
   EEPROM.get(1010, val);
   Serial.print("Endereco Eeprom: ");Serial.println(val);
 
-  // ===== SEÇÃO: LEITURA ATUAL DOS SENSORES =====
+  
   Serial.println("\n===== LEITURA ATUAL DOS SENSORES =====");
   
-  // Ler valores atuais dos sensores
+  
   float temp = dht.readTemperature();
   float hum = dht.readHumidity();
   
-  // Ler e calcular luminosidade
+  
   uint16_t luzMin, luzMax;
   EEPROM.get(EEPROM_LUZ_MIN_ADDR, luzMin);
   EEPROM.get(EEPROM_LUZ_MAX_ADDR, luzMax);
@@ -907,11 +906,11 @@ void debugEEPROM() {
     luzMapeada = constrain(luzMapeada, 0, 100);
   }
   
-  // Verificar se leituras do DHT são válidas
+  
   if (isnan(temp) || isnan(hum)) {
     Serial.println("Erro na leitura do sensor DHT22!");
   } else {
-    // Converter temperatura se necessário
+    
     float tempDisplay = temp;
     char unidadeTemp[2] = "C";
     if (unidadeTemperatura == 2) {
@@ -936,14 +935,14 @@ void debugEEPROM() {
   Serial.print("Leitura LDR (RAW): ");
   Serial.println(leituraLDR);
 
-  // ===== LIMITES ATUAIS =====
+
   Serial.println("\n===== LIMITES CONFIGURADOS =====");
   Serial.print("Limite Luminosidade: "); Serial.print(LIMITE_LUMINOSIDADE); Serial.println("%");
   Serial.print("Limite Temperatura: "); Serial.print(LIMITE_TEMPERATURA); Serial.println("°C");
   Serial.print("Limite Umidade: "); Serial.print(LIMITE_UMIDADE); Serial.println("%");
 }
 
-//====================== SETUP E LOOP PRINCIPAIS ======================
+
 void setup() {
   definevars();
   begins(); 
